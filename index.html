@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Wizards: 5th Grade Vocabulary Game</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #4b0082;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #8a2be2;
+            margin-bottom: 30px;
+        }
+        
+        .game-area {
+            margin: 20px 0;
+            min-height: 300px;
+        }
+        
+        .score-display {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #4b0082;
+        }
+        
+        .game-controls {
+            margin: 20px 0;
+        }
+        
+        button {
+            background-color: #9370db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #8a2be2;
+        }
+        
+        .word-card {
+            background-color: #e6e6fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #4b0082;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .option-btn {
+            flex: 1 1 45%;
+            min-width: 200px;
+            padding: 15px;
+            font-size: 1.2em;
+            margin: 5px;
+            background-color: #d8bfd8;
+        }
+        
+        .feedback {
+            font-size: 1.5em;
+            margin: 20px 0;
+            min-height: 40px;
+            font-weight: bold;
+        }
+        
+        .positive {
+            color: green;
+        }
+        
+        .negative {
+            color: red;
+        }
+        
+        .game-over {
+            font-size: 2em;
+            color: #4b0082;
+            margin: 20px 0;
+        }
+        
+        .instructions {
+            background-color: #e6e6fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .word-input {
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: 2px solid #9370db;
+            width: 80%;
+            max-width: 400px;
+            margin: 10px 0;
+        }
+        
+        .setup-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .setup-form textarea {
+            width: 80%;
+            height: 150px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #9370db;
+            font-family: inherit;
+        }
+        
+        .setup-form label {
+            font-size: 1.2em;
+            color: #4b0082;
+        }
+        
+        .game-mode-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .game-mode-btn {
+            background-color: #d8bfd8;
+            padding: 15px 25px;
+            font-size: 1.2em;
+        }
+        
+        .timer {
+            font-size: 1.2em;
+            color: #4b0082;
+            margin: 10px 0;
+        }
+        
+        .progress-container {
+            width: 80%;
+            margin: 10px auto;
+            background-color: #ddd;
+            border-radius: 5px;
+            height: 20px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #9370db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        @media (max-width: 600px) {
+            .option-btn {
+                flex: 1 1 100%;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Word Wizards</h1>
+        <div class="subtitle">5th Grade Vocabulary Challenge</div>
+        
+        <div id="setup-screen">
+            <div class="instructions">
+                <h2>Welcome to Word Wizards!</h2>
+                <p>This game will help you practice your vocabulary words. You can play in multiple ways:</p>
+                <ul>
+                    <li><strong>Multiple Choice:</strong> Match words with their definitions</li>
+                    <li><strong>Spelling Challenge:</strong> Type the word that matches the definition</li>
+                    <li><strong>Word Scramble:</strong> Unscramble vocabulary words</li>
+                </ul>
+                <p>Enter your vocabulary words and definitions below, then choose a game mode to start playing!</p>
+            </div>
+            
+            <div class="setup-form">
+                <label for="vocabulary-input">Enter your vocabulary words and definitions (one per line, word:definition)</label>
+                <textarea id="vocabulary-input" placeholder="Example:
+photosynthesis:the process by which plants use sunlight to make food
+atmosphere:the layers of gases surrounding a planet
+conservation:the protection of natural resources
+geology:the study of the earth's physical structure"></textarea>
+                
+                <button id="use-sample" class="game-mode-btn">Use Sample Words</button>
+            </div>
+            
+            <div class="game-mode-buttons">
+                <button id="multiple-choice-btn" class="game-mode-btn">Multiple Choice</button>
+                <button id="spelling-btn" class="game-mode-btn">Spelling Challenge</button>
+                <button id="scramble-btn" class="game-mode-btn">Word Scramble</button>
+            </div>
+        </div>
+        
+        <div id="game-screen" style="display: none;">
+            <div class="score-display">Score: <span id="score">0</span></div>
+            <div class="timer">Time: <span id="time-display">60</span> seconds</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="game-area">
+                <div id="question-container" class="word-card"></div>
+                <div id="options-container" class="options"></div>
+                <input type="text" id="answer-input" class="word-input" style="display: none;" placeholder="Type your answer here...">
+                <div id="feedback" class="feedback"></div>
+            </div>
+            
+            <div class="game-controls">
+                <button id="next-btn" style="display: none;">Next Word</button>
+                <button id="check-btn" style="display: none;">Check Answer</button>
+                <button id="end-game-btn">End Game</button>
+            </div>
+        </div>
+        
+        <div id="results-screen" style="display: none;">
+            <div class="game-over">Game Over!</div>
+            <div class="score-display">Final Score: <span id="final-score">0</span></div>
+            <div id="results-message"></div>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample vocabulary for demo purposes
+        const sampleVocabulary = [
+            { word: "photosynthesis", definition: "the process by which plants use sunlight to make food" },
+            { word: "atmosphere", definition: "the layers of gases surrounding a planet" },
+            { word: "conservation", definition: "the protection of natural resources" },
+            { word: "geology", definition: "the study of the earth's physical structure" },
+            { word: "precipitation", definition: "water that falls from clouds as rain, snow, or hail" },
+            { word: "ecosystem", definition: "a community of living organisms and their environment" },
+            { word: "adaptation", definition: "a change that helps a living thing survive in its environment" },
+            { word: "erosion", definition: "the process of wearing away soil and rock" },
+            { word: "revolution", definition: "one complete orbit around a central point" },
+            { word: "migration", definition: "the movement of animals from one region to another" }
+        ];
+        
+        // Game variables
+        let vocabulary = [];
+        let currentWord = null;
+        let currentIndex = 0;
+        let score = 0;
+        let gameMode = "";
+        let timer = null;
+        let timeLeft = 60;
+        
+        // DOM elements
+        const setupScreen = document.getElementById("setup-screen");
+        const gameScreen = document.getElementById("game-screen");
+        const resultsScreen = document.getElementById("results-screen");
+        const vocabularyInput = document.getElementById("vocabulary-input");
+        const useSampleBtn = document.getElementById("use-sample");
+        const multipleChoiceBtn = document.getElementById("multiple-choice-btn");
+        const spellingBtn = document.getElementById("spelling-btn");
+        const scrambleBtn = document.getElementById("scramble-btn");
+        const questionContainer = document.getElementById("question-container");
+        const optionsContainer = document.getElementById("options-container");
+        const answerInput = document.getElementById("answer-input");
+        const feedbackDiv = document.getElementById("feedback");
+        const nextBtn = document.getElementById("next-btn");
+        const checkBtn = document.getElementById("check-btn");
+        const endGameBtn = document.getElementById("end-game-btn");
+        const scoreDisplay = document.getElementById("score");
+        const finalScoreDisplay = document.getElementById("final-score");
+        const resultsMessage = document.getElementById("results-message");
+        const playAgainBtn = document.getElementById("play-again-btn");
+        const timeDisplay = document.getElementById("time-display");
+        const progressBar = document.getElementById("progress-bar");
+        
+        // Functions to handle game setup
+        useSampleBtn.addEventListener("click", () => {
+            let sampleText = "";
+            sampleVocabulary.forEach(item => {
+                sampleText += `${item.word}:${item.definition}\n`;
+            });
+            vocabularyInput.value = sampleText.trim();
+        });
+        
+        function parseVocabulary() {
+            const text = vocabularyInput.value.trim();
+            if (!text) {
+                alert("Please enter vocabulary words and definitions!");
+                return false;
+            }
+            
+            vocabulary = [];
+            const lines = text.split("\n");
+            for (const line of lines) {
+                if (line.trim() === "") continue;
+                
+                const parts = line.split(":");
+                if (parts.length < 2) {
+                    alert("Please use the format 'word:definition' for each line!");
+                    return false;
+                }
+                
+                vocabulary.push({
+                    word: parts[0].trim(),
+                    definition: parts.slice(1).join(":").trim()
+                });
+            }
+            
+            if (vocabulary.length < 3) {
+                alert("Please enter at least 3 vocabulary words!");
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function startGame(mode) {
+            if (!parseVocabulary()) return;
+            
+            gameMode = mode;
+            setupScreen.style.display = "none";
+            gameScreen.style.display = "block";
+            
+            // Shuffle vocabulary
+            vocabulary = shuffleArray([...vocabulary]);
+            
+            score = 0;
+            currentIndex = 0;
+            scoreDisplay.textContent = score;
+            
+            // Start timer
+            timeLeft = 60;
+            timeDisplay.textContent = timeLeft;
+            progressBar.style.width = "100%";
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                const percentage = (timeLeft / 60) * 100;
+                progressBar.style.width = `${percentage}%`;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+            
+            displayNextWord();
+        }
+        
+        // Game mode event listeners
+        multipleChoiceBtn.addEventListener("click", () => startGame("multiple-choice"));
+        spellingBtn.addEventListener("click", () => startGame("spelling"));
+        scrambleBtn.addEventListener("click", () => startGame("scramble"));
+        
+        // Game play functions
+        function displayNextWord() {
+            feedbackDiv.textContent = "";
+            feedbackDiv.className = "feedback";
+            
+            if (currentIndex >= vocabulary.length) {
+                // Reset to beginning if we've gone through all words
+                vocabulary = shuffleArray([...vocabulary]);
+                currentIndex = 0;
+            }
+            
+            currentWord = vocabulary[currentIndex];
+            currentIndex++;
+            
+            switch (gameMode) {
+                case "multiple-choice":
+                    displayMultipleChoice();
+                    break;
+                case "spelling":
+                    displaySpelling();
+                    break;
+                case "scramble":
+                    displayScramble();
+                    break;
+            }
+        }
+        
+        function displayMultipleChoice() {
+            questionContainer.textContent = currentWord.definition;
+            
+            // Create options with the correct answer and 3 random wrong answers
+            let options = [currentWord.word];
+            let availableWords = vocabulary.filter(item => item.word !== currentWord.word);
+            
+            // Shuffle and select up to 3 wrong answers
+            availableWords = shuffleArray(availableWords);
+            const numOptions = Math.min(3, availableWords.length);
+            
+            for (let i = 0; i < numOptions; i++) {
+                options.push(availableWords[i].word);
+            }
+            
+            options = shuffleArray(options);
+            
+            // Create buttons for options
+            optionsContainer.innerHTML = "";
+            options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.className = "option-btn";
+                button.addEventListener("click", () => checkMultipleChoiceAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+            
+            // Show/hide UI elements
+            optionsContainer.style.display = "flex";
+            answerInput.style.display = "none";
+            nextBtn.style.display = "none";
+            checkBtn.style.display = "none";
+        }
+        
+        function displaySpelling() {
+            questionContainer.textContent = currentWord.definition;
+            
+            // Show/hide UI elements
+            optionsContainer.style.display = "none";
+            answerInput.style.display = "block";
+            answerInput.value = "";
+            checkBtn.style.display = "block";
+            nextBtn.style.display = "none";
+            
+            // Focus on input field
+            setTimeout(() => answerInput.focus(), 100);
+        }
+        
+        function displayScramble() {
+            // Scramble the current word
+            const scrambledWord = scrambleWord(currentWord.word);
+            questionContainer.textContent = `Unscramble: ${scrambledWord}`;
+            
+            // Show/hide UI elements
+            optionsContainer.style.display = "none";
+            answerInput.style.display = "block";
+            answerInput.value = "";
+            checkBtn.style.display = "block";
+            nextBtn.style.display = "none";
+            
+            // Focus on input field
+            setTimeout(() => answerInput.focus(), 100);
+        }
+        
+        // Answer checking functions
+        function checkMultipleChoiceAnswer(selectedOption) {
+            const isCorrect = selectedOption === currentWord.word;
+            
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+                feedbackDiv.textContent = "Correct! Great job!";
+                feedbackDiv.className = "feedback positive";
+            } else {
+                feedbackDiv.textContent = `Incorrect. The correct answer is: ${currentWord.word}`;
+                feedbackDiv.className = "feedback negative";
+            }
+            
+            // Disable all option buttons
+            const buttons = optionsContainer.querySelectorAll("button");
+            buttons.forEach(button => {
+                button.disabled = true;
+                if (button.textContent === currentWord.word) {
+                    button.style.backgroundColor = "#90ee90"; // Light green for correct answer
+                } else if (button.textContent === selectedOption && !isCorrect) {
+                    button.style.backgroundColor = "#ffcccb"; // Light red for wrong selection
+                }
+            });
+            
+            // Show next button after answer is checked
+            nextBtn.style.display = "block";
+        }
+        
+        function checkTypedAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = currentWord.word.toLowerCase();
+            
+            const isCorrect = userAnswer === correctAnswer;
+            
+            if (isCorrect) {
+                score++;
+                scoreDisplay.textContent = score;
+                feedbackDiv.textContent = "Correct! Great job!";
+                feedbackDiv.className = "feedback positive";
+            } else {
+                feedbackDiv.textContent = `Incorrect. The correct answer is: ${currentWord.word}`;
+                feedbackDiv.className = "feedback negative";
+            }
+            
+            checkBtn.style.display = "none";
+            nextBtn.style.display = "block";
+        }
+        
+        // Event listeners for game control buttons
+        nextBtn.addEventListener("click", displayNextWord);
+        
+        checkBtn.addEventListener("click", checkTypedAnswer);
+        
+        answerInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkTypedAnswer();
+            }
+        });
+        
+        endGameBtn.addEventListener("click", endGame);
+        
+        playAgainBtn.addEventListener("click", () => {
+            resultsScreen.style.display = "none";
+            setupScreen.style.display = "block";
+        });
+        
+        function endGame() {
+            clearInterval(timer);
+            gameScreen.style.display = "none";
+            resultsScreen.style.display = "block";
+            
+            finalScoreDisplay.textContent = score;
+            
+            // Generate results message based on score
+            let message = "";
+            if (score >= vocabulary.length * 0.8) {
+                message = "Amazing job! You're a Word Wizard!";
+            } else if (score >= vocabulary.length * 0.6) {
+                message = "Great work! Keep practicing to become a Word Wizard!";
+            } else {
+                message = "Good effort! Keep studying your vocabulary words!";
+            }
+            
+            resultsMessage.textContent = message;
+        }
+        
+        // Helper functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function scrambleWord(word) {
+            const letters = word.split("");
+            let scrambled;
+            
+            do {
+                scrambled = shuffleArray([...letters]).join("");
+            } while (scrambled === word); // Make sure it's actually scrambled
+            
+            return scrambled;
+        }
+    </script>
+</body>
+</html>
