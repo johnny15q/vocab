@@ -6,7 +6,7 @@
     <title>Word Wizards: 5th Grade Vocabulary Game</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             background-color: #f0f8ff;
             margin: 0;
             padding: 20px;
@@ -189,6 +189,64 @@
             width: 0%;
             transition: width 0.5s;
         }
+
+        /* Add this to the existing style section */
+        .save-load-container {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #vocabulary-name {
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: 2px solid #9370db;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        #save-vocab-btn {
+            background-color: #4b0082;
+        }
+
+        .saved-sets {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .saved-sets h3 {
+            color: #4b0082;
+            margin-bottom: 10px;
+        }
+
+        .saved-sets-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .saved-sets-list li {
+            display: flex;
+            margin: 5px 0;
+            background-color: #e6e6fa;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .load-set-btn {
+            flex-grow: 1;
+            text-align: left;
+            background-color: #d8bfd8;
+            border-radius: 0;
+        }
+
+        .delete-set-btn {
+            background-color: #ff6b6b;
+            border-radius: 0;
+            padding: 10px 15px;
+        }
         
         @media (max-width: 600px) {
             .option-btn {
@@ -227,6 +285,19 @@ conservation:the protection of natural resources
 geology:the study of the earth's physical structure"></textarea>
                 
                 <button id="use-sample" class="game-mode-btn">Use Sample Words</button>
+
+                <div class="save-load-container">
+                    <label for="vocabulary-name">Vocabulary Set Name:</label>
+                    <input type="text" id="vocabulary-name" placeholder="e.g., Science Chapter 3">
+                    <button id="save-vocab-btn">Save Vocabulary Set</button>
+                </div>
+
+                <div class="saved-sets">
+                    <h3>Saved Vocabulary Sets</h3>
+                    <div id="saved-sets-container">
+                        <!-- Saved sets will be listed here -->
+                    </div>
+                </div>
             </div>
             
             <div class="game-mode-buttons">
@@ -390,6 +461,7 @@ geology:the study of the earth's physical structure"></textarea>
         multipleChoiceBtn.addEventListener("click", () => startGame("multiple-choice"));
         spellingBtn.addEventListener("click", () => startGame("spelling"));
         scrambleBtn.addEventListener("click", () => startGame("scramble"));
+        
         
         // Game play functions
         function displayNextWord() {
@@ -588,6 +660,108 @@ geology:the study of the earth's physical structure"></textarea>
             
             return scrambled;
         }
+
+        // Add these functions to the existing JavaScript section
+
+// Function to save vocabulary to local storage
+function saveVocabulary() {
+    const vocabName = document.getElementById("vocabulary-name").value.trim();
+    if (!vocabName) {
+        alert("Please enter a name for this vocabulary set!");
+        return;
+    }
+    
+    if (!parseVocabulary()) return;
+    
+    // Get existing saved sets or create empty object
+    let savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
+    
+    // Save current vocabulary with the given name
+    savedSets[vocabName] = vocabulary;
+    localStorage.setItem("wordWizardsSets", JSON.stringify(savedSets));
+    
+    alert(`Vocabulary set "${vocabName}" saved successfully!`);
+    updateSavedSetsList();
+}
+
+// Function to load vocabulary from local storage
+function loadVocabulary(setName) {
+    const savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
+    
+    if (savedSets[setName]) {
+        const loadedVocab = savedSets[setName];
+        
+        // Convert back to text format for the textarea
+        let vocabText = "";
+        loadedVocab.forEach(item => {
+            vocabText += `${item.word}:${item.definition}\n`;
+        });
+        
+        vocabularyInput.value = vocabText.trim();
+        document.getElementById("vocabulary-name").value = setName;
+        
+        alert(`Vocabulary set "${setName}" loaded successfully!`);
+    }
+}
+
+// Function to delete a saved vocabulary set
+function deleteVocabularySet(setName) {
+    if (confirm(`Are you sure you want to delete the vocabulary set "${setName}"?`)) {
+        const savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
+        
+        if (savedSets[setName]) {
+            delete savedSets[setName];
+            localStorage.setItem("wordWizardsSets", JSON.stringify(savedSets));
+            alert(`Vocabulary set "${setName}" deleted successfully!`);
+            updateSavedSetsList();
+        }
+    }
+}
+
+// Function to update the dropdown of saved sets
+function updateSavedSetsList() {
+    const savedSetsContainer = document.getElementById("saved-sets-container");
+    savedSetsContainer.innerHTML = "";
+    
+    const savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
+    const setNames = Object.keys(savedSets);
+    
+    if (setNames.length === 0) {
+        savedSetsContainer.innerHTML = "<p>No saved vocabulary sets found.</p>";
+        return;
+    }
+    
+    const setsList = document.createElement("ul");
+    setsList.className = "saved-sets-list";
+    
+    setNames.forEach(setName => {
+        const listItem = document.createElement("li");
+        
+        const loadButton = document.createElement("button");
+        loadButton.textContent = setName;
+        loadButton.className = "load-set-btn";
+        loadButton.onclick = () => loadVocabulary(setName);
+        
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "✕";
+        deleteButton.className = "delete-set-btn";
+        deleteButton.onclick = (e) => {
+            e.stopPropagation();
+            deleteVocabularySet(setName);
+        };
+        
+        listItem.appendChild(loadButton);
+        listItem.appendChild(deleteButton);
+        setsList.appendChild(listItem);
+    });
+    
+    savedSetsContainer.appendChild(setsList);
+}
+
+// Initialize the saved sets list when page loads
+document.addEventListener("DOMContentLoaded", updateSavedSetsList);
+// Add this to your event listeners section
+document.getElementById("save-vocab-btn").addEventListener("click", saveVocabulary);
     </script>
 </body>
 </html>
