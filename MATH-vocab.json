@@ -1,0 +1,247 @@
+[
+    {
+      "word": "Acute triangle",
+      "definition": "all three angles measure less than 90 degrees"
+    },
+    {
+      "word": "Area",
+      "definition": "The amount of space a shape or object takes up"
+    },
+    {
+      "word": "Average",
+      "definition": "The sum of all numbers divided by the total number of values in a set/list or the mean"
+    },
+    {
+      "word": "Base",
+      "definition": "Bottom layer - same as the area - it’s the length x width"
+    },
+    {
+      "word": "Composite Volume",
+      "definition": "when adding 2 or more volumes together"
+    },
+    {
+      "word": "Congruent",
+      "definition": "same size, side and shape"
+    },
+    {
+      "word": "Coordinate Plane",
+      "definition": "a plane or grid created by two intersecting and perpendicular lines called axes"
+    },
+    {
+      "word": "Cube",
+      "definition": "a solid figure with 6 congruent square faces"
+    },
+    {
+      "word": "Decimal Expansion",
+      "definition": "Adding zeros at the end of a decimal will not change its value"
+    },
+    {
+      "word": "Decimal Point",
+      "definition": "the point that separates the whole numbers from the parts"
+    },
+    {
+      "word": "Difference",
+      "definition": "answer in subtraction"
+    },
+    {
+      "word": "Dividend",
+      "definition": "the entire amount; the number in the house that is being divided"
+    },
+    {
+      "word": "Divisor",
+      "definition": "the part or number of groups the number is being broken into; the number outside the house"
+    },
+    {
+      "word": "Equation",
+      "definition": "a math sentence containing numbers, symbols and an equal sign"
+    },
+    {
+      "word": "Equilateral triangle",
+      "definition": "triangle with 3 equal sides"
+    },
+    {
+      "word": "Equivalent Fraction",
+      "definition": "fractions with the SAME value or amount"
+    },
+    {
+      "word": "Evaluate",
+      "definition": "solve it"
+    },
+    {
+      "word": "Even Numbers",
+      "definition": "0, 2, 4, 6, 8, 10"
+    },
+    {
+      "word": "Expanded Form",
+      "definition": "Breaking a number down into its place value"
+    },
+    {
+      "word": "Exponent",
+      "definition": "a number on the top right hand corner that tells you how many times the number is multiplied by itself"
+    },
+    {
+      "word": "Expression",
+      "definition": "a math sentence that is made up of symbols and numbers WITHOUT an equal sign"
+    },
+    {
+      "word": "Factor Tree",
+      "definition": "trees of factors for a number; helps when finding GCF"
+    },
+    {
+      "word": "Fraction",
+      "definition": "names parts that make up a whole"
+    },
+    {
+      "word": "Frequency",
+      "definition": "the number of times a number occurs or is recorded, often, MODE"
+    },
+    {
+      "word": "Greatest Common Factor",
+      "definition": "GCF; the biggest number that both have in common"
+    },
+    {
+      "word": "Height, Depth, Layers, Deep",
+      "definition": "how tall an object is"
+    },
+    {
+      "word": "Improper fraction",
+      "definition": "“top heavy”, the numerator is greater than the denominator in a fraction"
+    },
+    {
+      "word": "Isosceles triangle",
+      "definition": "triangle with 2 equal sides"
+    },
+    {
+      "word": "Least Common Denominator (LCM/LCD)",
+      "definition": "the SMALLEST multiple that the numbers have in common or match"
+    },
+    {
+      "word": "Length",
+      "definition": "how long or tall something is or distance"
+    },
+    {
+      "word": "Like Fractions",
+      "definition": "fractions that have the SAME denominator"
+    },
+    {
+      "word": "Line plot",
+      "definition": "graph that uses a number line and Xs or dots to show data"
+    },
+    {
+      "word": "Mixed Number",
+      "definition": "a number that is made up of a whole number and a fraction"
+    },
+    {
+      "word": "Mode",
+      "definition": "the number that appears most often on a line plot or list of numbers"
+    },
+    {
+      "word": "Obtuse triangle",
+      "definition": "a triangle with one angle that is greater than 90 degrees"
+    },
+    {
+      "word": "Odd Number",
+      "definition": "1, 3, 5, 7, 9"
+    },
+    {
+      "word": "Ordered Pair",
+      "definition": "(x,y) a pair of numbers that are used to locate a point on a coordinate plane"
+    },
+    {
+      "word": "Order of Operations",
+      "definition": "PEMDAS"
+    },
+    {
+      "word": "Origin",
+      "definition": "point where the two axes meet on a coordinate plane → (0,0)"
+    },
+    {
+      "word": "Parallelogram",
+      "definition": "quadrilateral with two pairs of equal sides and two pairs of parallel sides (Ex: square, rectangle and rhombus)"
+    },
+    {
+      "word": "Pattern",
+      "definition": "repeating rule that is followed in a list of numbers (Ex: add 6)"
+    },
+    {
+      "word": "Perimeter",
+      "definition": "the distance around a shape or object"
+    },
+    {
+      "word": "Perpendicular Lines",
+      "definition": "lines that intersect creating an angle that measures 90 degrees"
+    },
+    {
+      "word": "Place Value",
+      "definition": "where the digit is located"
+    },
+    {
+      "word": "Powers of 10",
+      "definition": "add a 0 when x by 10 or take a zero when ÷ by 10"
+    },
+    {
+      "word": "Product",
+      "definition": "the answer to multiplication"
+    },
+    {
+      "word": "Quotient",
+      "definition": "the answer in division"
+    },
+    {
+      "word": "Reciprocal",
+      "definition": "when the numerator and denominator of a fraction switch places"
+    },
+    {
+      "word": "Rectangular Prism",
+      "definition": "a solid 3D figure where all six faces are rectangles"
+    },
+    {
+      "word": "Regular Polygon",
+      "definition": "a shape with ALL equal sides and ALL equal angles (Ex: square)"
+    },
+    {
+      "word": "Right Triangle",
+      "definition": "a triangle with one angle that measures 90 degrees"
+    },
+    {
+      "word": "Scalene triangle",
+      "definition": "triangle with 3 different sides"
+    },
+    {
+      "word": "Simplify/Simplest Form",
+      "definition": "dividing the fraction to its lowest form"
+    },
+    {
+      "word": "Square",
+      "definition": "4 sided shape with all equal sides and 4 right angles"
+    },
+    {
+      "word": "Standard Form",
+      "definition": "when writing the number in number form, regular number with digits"
+    },
+    {
+      "word": "Sum/Total",
+      "definition": "the answer to addition"
+    },
+    {
+      "word": "Unlike Fractions",
+      "definition": "Fractions that have DIFFERENT denominators"
+    },
+    {
+      "word": "Value",
+      "definition": "how much a number is worth (Ex: the 2 in 245 has a value of 200 because there are 2 hundreds)"
+    },
+    {
+      "word": "Volume",
+      "definition": "how much a 3D shape can hold or capacity"
+    },
+    {
+      "word": "Width",
+      "definition": "how wide an object is or thickness"
+    },
+    {
+      "word": "Word Form",
+      "definition": "when writing a number or decimal in words (SPELL IT OUT)"
+    }
+  ]
+  
