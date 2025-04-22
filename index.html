@@ -132,28 +132,6 @@
             margin: 10px 0;
         }
         
-        .setup-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .setup-form textarea {
-            width: 80%;
-            height: 150px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 2px solid #9370db;
-            font-family: inherit;
-        }
-        
-        .setup-form label {
-            font-size: 1.2em;
-            color: #4b0082;
-        }
-        
         .game-mode-buttons {
             display: flex;
             justify-content: center;
@@ -189,63 +167,34 @@
             width: 0%;
             transition: width 0.5s;
         }
-
-        /* Add this to the existing style section */
-        .save-load-container {
-            margin: 20px 0;
+        
+        .vocab-sets {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 10px;
+            margin: 20px 0;
         }
-
-        #vocabulary-name {
-            padding: 10px;
+        
+        .vocab-set-btn {
+            flex: 1 1 45%;
+            min-width: 200px;
+            max-width: 300px;
+            padding: 20px;
             font-size: 1.2em;
-            border-radius: 5px;
-            border: 2px solid #9370db;
-            width: 80%;
-            max-width: 400px;
-        }
-
-        #save-vocab-btn {
-            background-color: #4b0082;
-        }
-
-        .saved-sets {
-            width: 80%;
-            margin: 20px auto;
-        }
-
-        .saved-sets h3 {
-            color: #4b0082;
-            margin-bottom: 10px;
-        }
-
-        .saved-sets-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .saved-sets-list li {
-            display: flex;
-            margin: 5px 0;
+            margin: 10px;
             background-color: #e6e6fa;
-            border-radius: 5px;
-            overflow: hidden;
+            color: #4b0082;
+            border: 2px solid #9370db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-
-        .load-set-btn {
-            flex-grow: 1;
-            text-align: left;
+        
+        .vocab-set-btn:hover {
             background-color: #d8bfd8;
-            border-radius: 0;
-        }
-
-        .delete-set-btn {
-            background-color: #ff6b6b;
-            border-radius: 0;
-            padding: 10px 15px;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         @media (max-width: 600px) {
@@ -255,6 +204,10 @@
             
             h1 {
                 font-size: 1.8em;
+            }
+            
+            .vocab-set-btn {
+                flex: 1 1 100%;
             }
         }
     </style>
@@ -267,40 +220,22 @@
         <div id="setup-screen">
             <div class="instructions">
                 <h2>Welcome to Word Wizards!</h2>
-                <p>This game will help you practice your vocabulary words. You can play in multiple ways:</p>
+                <p>Choose a vocabulary set below, then select a game mode to start playing:</p>
                 <ul>
                     <li><strong>Multiple Choice:</strong> Match words with their definitions</li>
                     <li><strong>Spelling Challenge:</strong> Type the word that matches the definition</li>
                     <li><strong>Word Scramble:</strong> Unscramble vocabulary words</li>
                 </ul>
-                <p>Enter your vocabulary words and definitions below, then choose a game mode to start playing!</p>
             </div>
             
-            <div class="setup-form">
-                <label for="vocabulary-input">Enter your vocabulary words and definitions (one per line, word:definition)</label>
-                <textarea id="vocabulary-input" placeholder="Example:
-photosynthesis:the process by which plants use sunlight to make food
-atmosphere:the layers of gases surrounding a planet
-conservation:the protection of natural resources
-geology:the study of the earth's physical structure"></textarea>
-                
-                <button id="use-sample" class="game-mode-btn">Use Sample Words</button>
-
-                <div class="save-load-container">
-                    <label for="vocabulary-name">Vocabulary Set Name:</label>
-                    <input type="text" id="vocabulary-name" placeholder="e.g., Science Chapter 3">
-                    <button id="save-vocab-btn">Save Vocabulary Set</button>
-                </div>
-
-                <div class="saved-sets">
-                    <h3>Saved Vocabulary Sets</h3>
-                    <div id="saved-sets-container">
-                        <!-- Saved sets will be listed here -->
-                    </div>
-                </div>
+            <h3>Select a Vocabulary Set</h3>
+            <div id="vocab-sets" class="vocab-sets">
+                <!-- Vocabulary sets will be loaded here -->
+                <div class="loading">Loading vocabulary sets...</div>
             </div>
             
-            <div class="game-mode-buttons">
+            <div class="game-mode-buttons" style="display: none;" id="game-mode-container">
+                <h3>Select a Game Mode</h3>
                 <button id="multiple-choice-btn" class="game-mode-btn">Multiple Choice</button>
                 <button id="spelling-btn" class="game-mode-btn">Spelling Challenge</button>
                 <button id="scramble-btn" class="game-mode-btn">Word Scramble</button>
@@ -324,7 +259,7 @@ geology:the study of the earth's physical structure"></textarea>
             <div class="game-controls">
                 <button id="next-btn" style="display: none;">Next Word</button>
                 <button id="check-btn" style="display: none;">Check Answer</button>
-                <button id="end-game-btn">End Game</button>
+                <button id="end-game-btn">Back to Menu</button>
             </div>
         </div>
         
@@ -337,20 +272,6 @@ geology:the study of the earth's physical structure"></textarea>
     </div>
 
     <script>
-        // Sample vocabulary for demo purposes
-        const sampleVocabulary = [
-            { word: "photosynthesis", definition: "the process by which plants use sunlight to make food" },
-            { word: "atmosphere", definition: "the layers of gases surrounding a planet" },
-            { word: "conservation", definition: "the protection of natural resources" },
-            { word: "geology", definition: "the study of the earth's physical structure" },
-            { word: "precipitation", definition: "water that falls from clouds as rain, snow, or hail" },
-            { word: "ecosystem", definition: "a community of living organisms and their environment" },
-            { word: "adaptation", definition: "a change that helps a living thing survive in its environment" },
-            { word: "erosion", definition: "the process of wearing away soil and rock" },
-            { word: "revolution", definition: "one complete orbit around a central point" },
-            { word: "migration", definition: "the movement of animals from one region to another" }
-        ];
-        
         // Game variables
         let vocabulary = [];
         let currentWord = null;
@@ -359,13 +280,22 @@ geology:the study of the earth's physical structure"></textarea>
         let gameMode = "";
         let timer = null;
         let timeLeft = 60;
+        let currentVocabSet = "";
+        
+        // Define vocabulary sets with their file paths
+        const vocabularySets = [
+            { name: "Science - Animals", file: "science-ani.json" },
+            { name: "Science - Planets", file: "science-planet.json" },
+            { name: "ELA Vocabulary", file: "ela-vocab.json" },
+            { name: "Math Terms", file: "math-vocab.json" }
+        ];
         
         // DOM elements
         const setupScreen = document.getElementById("setup-screen");
         const gameScreen = document.getElementById("game-screen");
         const resultsScreen = document.getElementById("results-screen");
-        const vocabularyInput = document.getElementById("vocabulary-input");
-        const useSampleBtn = document.getElementById("use-sample");
+        const vocabSetsContainer = document.getElementById("vocab-sets");
+        const gameModeContainer = document.getElementById("game-mode-container");
         const multipleChoiceBtn = document.getElementById("multiple-choice-btn");
         const spellingBtn = document.getElementById("spelling-btn");
         const scrambleBtn = document.getElementById("scramble-btn");
@@ -383,49 +313,69 @@ geology:the study of the earth's physical structure"></textarea>
         const timeDisplay = document.getElementById("time-display");
         const progressBar = document.getElementById("progress-bar");
         
-        // Functions to handle game setup
-        useSampleBtn.addEventListener("click", () => {
-            let sampleText = "";
-            sampleVocabulary.forEach(item => {
-                sampleText += `${item.word}:${item.definition}\n`;
+        // Function to load vocabulary sets from JSON files
+        function loadVocabularySets() {
+            vocabSetsContainer.innerHTML = "";
+            
+            vocabularySets.forEach(set => {
+                const button = document.createElement("button");
+                button.className = "vocab-set-btn";
+                button.textContent = set.name;
+                button.addEventListener("click", () => loadVocabularySet(set));
+                vocabSetsContainer.appendChild(button);
             });
-            vocabularyInput.value = sampleText.trim();
-        });
-        
-        function parseVocabulary() {
-            const text = vocabularyInput.value.trim();
-            if (!text) {
-                alert("Please enter vocabulary words and definitions!");
-                return false;
-            }
-            
-            vocabulary = [];
-            const lines = text.split("\n");
-            for (const line of lines) {
-                if (line.trim() === "") continue;
-                
-                const parts = line.split(":");
-                if (parts.length < 2) {
-                    alert("Please use the format 'word:definition' for each line!");
-                    return false;
-                }
-                
-                vocabulary.push({
-                    word: parts[0].trim(),
-                    definition: parts.slice(1).join(":").trim()
-                });
-            }
-            
-            if (vocabulary.length < 3) {
-                alert("Please enter at least 3 vocabulary words!");
-                return false;
-            }
-            
-            return true;
         }
         
+        // Function to load a specific vocabulary set
+        function loadVocabularySet(set) {
+            fetch(set.file)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${set.name}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Extract vocabulary data - handle both formats
+                    if (Array.isArray(data)) {
+                        // Direct array format
+                        vocabulary = data;
+                    } else {
+                        // Object with subject key format
+                        const subjectKey = Object.keys(data)[0];
+                        vocabulary = data[subjectKey];
+                    }
+                    
+                    currentVocabSet = set.name;
+                    
+                    // Show game modes once vocabulary is loaded
+                    gameModeContainer.style.display = "block";
+                    
+                    // Highlight selected set
+                    const allButtons = vocabSetsContainer.querySelectorAll(".vocab-set-btn");
+                    allButtons.forEach(btn => {
+                        btn.style.backgroundColor = "#e6e6fa";
+                        btn.style.fontWeight = "normal";
+                    });
+                    
+                    const selectedBtn = Array.from(allButtons).find(btn => btn.textContent === set.name);
+                    if (selectedBtn) {
+                        selectedBtn.style.backgroundColor = "#d8bfd8";
+                        selectedBtn.style.fontWeight = "bold";
+                    }
+                })
+                .catch(error => {
+                    console.error(`Error loading ${set.file}:`, error);
+                    alert(`Failed to load vocabulary set: ${set.name}`);
+                });
+        }
+        
+        // Function to start game
         function startGame(mode) {
-            if (!parseVocabulary()) return;
+            if (!vocabulary.length) {
+                alert("Please select a vocabulary set first!");
+                return;
+            }
             
             gameMode = mode;
             setupScreen.style.display = "none";
@@ -614,11 +564,17 @@ geology:the study of the earth's physical structure"></textarea>
             }
         });
         
-        endGameBtn.addEventListener("click", endGame);
+        endGameBtn.addEventListener("click", function() {
+            clearInterval(timer);
+            gameScreen.style.display = "none";
+            setupScreen.style.display = "block";
+            gameModeContainer.style.display = "block";
+        });
         
         playAgainBtn.addEventListener("click", () => {
             resultsScreen.style.display = "none";
             setupScreen.style.display = "block";
+            gameModeContainer.style.display = "block";
         });
         
         function endGame() {
@@ -661,107 +617,8 @@ geology:the study of the earth's physical structure"></textarea>
             return scrambled;
         }
 
-        // Add these functions to the existing JavaScript section
-
-// Function to save vocabulary to local storage
-function saveVocabulary() {
-    const vocabName = document.getElementById("vocabulary-name").value.trim();
-    if (!vocabName) {
-        alert("Please enter a name for this vocabulary set!");
-        return;
-    }
-    
-    if (!parseVocabulary()) return;
-    
-    // Get existing saved sets or create empty object
-    let savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
-    
-    // Save current vocabulary with the given name
-    savedSets[vocabName] = vocabulary;
-    localStorage.setItem("wordWizardsSets", JSON.stringify(savedSets));
-    
-    alert(`Vocabulary set "${vocabName}" saved successfully!`);
-    updateSavedSetsList();
-}
-
-// Function to load vocabulary from local storage
-function loadVocabulary(setName) {
-    const savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
-    
-    if (savedSets[setName]) {
-        const loadedVocab = savedSets[setName];
-        
-        // Convert back to text format for the textarea
-        let vocabText = "";
-        loadedVocab.forEach(item => {
-            vocabText += `${item.word}:${item.definition}\n`;
-        });
-        
-        vocabularyInput.value = vocabText.trim();
-        document.getElementById("vocabulary-name").value = setName;
-        
-        alert(`Vocabulary set "${setName}" loaded successfully!`);
-    }
-}
-
-// Function to delete a saved vocabulary set
-function deleteVocabularySet(setName) {
-    if (confirm(`Are you sure you want to delete the vocabulary set "${setName}"?`)) {
-        const savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
-        
-        if (savedSets[setName]) {
-            delete savedSets[setName];
-            localStorage.setItem("wordWizardsSets", JSON.stringify(savedSets));
-            alert(`Vocabulary set "${setName}" deleted successfully!`);
-            updateSavedSetsList();
-        }
-    }
-}
-
-// Function to update the dropdown of saved sets
-function updateSavedSetsList() {
-    const savedSetsContainer = document.getElementById("saved-sets-container");
-    savedSetsContainer.innerHTML = "";
-    
-    const savedSets = JSON.parse(localStorage.getItem("wordWizardsSets") || "{}");
-    const setNames = Object.keys(savedSets);
-    
-    if (setNames.length === 0) {
-        savedSetsContainer.innerHTML = "<p>No saved vocabulary sets found.</p>";
-        return;
-    }
-    
-    const setsList = document.createElement("ul");
-    setsList.className = "saved-sets-list";
-    
-    setNames.forEach(setName => {
-        const listItem = document.createElement("li");
-        
-        const loadButton = document.createElement("button");
-        loadButton.textContent = setName;
-        loadButton.className = "load-set-btn";
-        loadButton.onclick = () => loadVocabulary(setName);
-        
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "✕";
-        deleteButton.className = "delete-set-btn";
-        deleteButton.onclick = (e) => {
-            e.stopPropagation();
-            deleteVocabularySet(setName);
-        };
-        
-        listItem.appendChild(loadButton);
-        listItem.appendChild(deleteButton);
-        setsList.appendChild(listItem);
-    });
-    
-    savedSetsContainer.appendChild(setsList);
-}
-
-// Initialize the saved sets list when page loads
-document.addEventListener("DOMContentLoaded", updateSavedSetsList);
-// Add this to your event listeners section
-document.getElementById("save-vocab-btn").addEventListener("click", saveVocabulary);
+        // Load vocabulary sets when page loads
+        document.addEventListener("DOMContentLoaded", loadVocabularySets);
     </script>
 </body>
 </html>
