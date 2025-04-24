@@ -269,9 +269,30 @@
             <div id="results-message"></div>
             <button id="play-again-btn">Play Again</button>
         </div>
+
+
+        <div id="leaderboard-screen" style="display: none;">
+            <h2>Word Wizards Leaderboard</h2>
+            <div id="leaderboard-filters">
+                <select id="filter-game-mode">
+                    <option value="">All Game Modes</option>
+                    <option value="multiple-choice">Multiple Choice</option>
+                    <option value="spelling">Spelling Challenge</option>
+                    <option value="scramble">Word Scramble</option>
+                </select>
+                <select id="filter-vocab-set">
+                    <option value="">All Vocabulary Sets</option>
+                    <!-- Vocabulary sets will be added dynamically -->
+                </select>
+                <button id="apply-filters">Apply Filters</button>
+            </div>
+            <div id="leaderboard-data"></div>
+            <button id="close-leaderboard">Back to Game</button>
+        </div>
     </div>
 
     <script>
+
         // Game variables
         let vocabulary = [];
         let currentWord = null;
@@ -284,10 +305,10 @@
         
         // Define vocabulary sets with their file paths
         const vocabularySets = [
-            { name: "Science - Animals", file: "SCIENCE-ani.json" },
-            { name: "Science - Planets", file: "SCIENCE-planet.json" },
-            { name: "ELA Vocabulary", file: "ELA-vocab.json" },
-            { name: "Math Terms", file: "MATH-vocab.json" }
+            { name: "Science - Animals", file: "science-ani.json" },
+            { name: "Science - Planets", file: "science-planet.json" },
+            { name: "ELA Vocabulary", file: "ela-vocab.json" },
+            { name: "Math Terms", file: "math-vocab.json" }
         ];
         
         // DOM elements
@@ -616,6 +637,221 @@
             
             return scrambled;
         }
+
+        // Add these variables to your existing game variables
+let leaderboardApiUrl = "https://script.google.com/macros/s/AKfycbyy1gbJoCtEv0ATU7xFqKfn_yhp7O6HQ5xEJK41jZ2kg3svdHK6LmwN6kjQr-5T3g9jLg/exec";
+let playerName = "";
+
+// Add this function to save score
+function saveScoreToLeaderboard() {
+    if (!playerName) {
+        playerName = prompt("Enter your name for the leaderboard:", "Player");
+        if (!playerName) playerName = "Anonymous";
+    }
+    
+    fetch(leaderboardApiUrl, {
+        method: "POST",
+        mode: "no-cors", // Important for cross-origin requests
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+            "action": "saveScore",
+            "playerName": playerName,
+            "score": score,
+            "gameMode": gameMode,
+            "vocabSet": currentVocabSet
+        })
+    })
+    .then(() => {
+        console.log("Score saved to leaderboard");
+        // No response handling with no-cors mode
+    })
+    .catch(error => {
+        console.error("Error saving score:", error);
+    });
+}
+
+// Add this function to get and display leaderboard
+function showLeaderboard() {
+    // Create leaderboard overlay
+    const leaderboardOverlay = document.createElement("div");
+    leaderboardOverlay.style.position = "fixed";
+    leaderboardOverlay.style.top = "0";
+    leaderboardOverlay.style.left = "0";
+    leaderboardOverlay.style.width = "100%";
+    leaderboardOverlay.style.height = "100%";
+    leaderboardOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+    leaderboardOverlay.style.display = "flex";
+    leaderboardOverlay.style.justifyContent = "center";
+    leaderboardOverlay.style.alignItems = "center";
+    leaderboardOverlay.style.zIndex = "1000";
+    
+    const leaderboardContent = document.createElement("div");
+    leaderboardContent.style.backgroundColor = "white";
+    leaderboardContent.style.padding = "20px";
+    leaderboardContent.style.borderRadius = "10px";
+    leaderboardContent.style.maxWidth = "600px";
+    leaderboardContent.style.width = "90%";
+    leaderboardContent.style.maxHeight = "80vh";
+    leaderboardContent.style.overflowY = "auto";
+    leaderboardContent.style.fontFamily = "'Comic Sans MS', cursive, sans-serif";
+    
+    leaderboardContent.innerHTML = `
+        <h2 style="color: #4b0082; text-align: center;">Word Wizards Leaderboard</h2>
+        <div id="leaderboard-filters" style="margin-bottom: 15px; text-align: center;">
+            <select id="filter-game-mode">
+                <option value="">All Game Modes</option>
+                <option value="multiple-choice">Multiple Choice</option>
+                <option value="spelling">Spelling Challenge</option>
+                <option value="scramble">Word Scramble</option>
+            </select>
+            <select id="filter-vocab-set">
+                <option value="">All Vocabulary Sets</option>
+                ${vocabularySets.map(set => `<option value="${set.name}">${set.name}</option>`).join('')}
+            </select>
+            <button id="apply-filters" style="background-color: #9370db; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Apply Filters</button>
+        </div>
+        <div id="leaderboard-data">Loading leaderboard data...</div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="close-leaderboard" style="background-color: #9370db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+    `;
+    
+    leaderboardOverlay.appendChild(leaderboardContent);
+    document.body.appendChild(leaderboardOverlay);
+    
+    // Load leaderboard data
+    loadLeaderboardData();
+    
+    // Add event listeners
+    document.getElementById("close-leaderboard").addEventListener("click", () => {
+        document.body.removeChild(leaderboardOverlay);
+    });
+    
+    document.getElementById("apply-filters").addEventListener("click", loadLeaderboardData);
+}
+
+function loadLeaderboardData() {
+    const gameMode = document.getElementById("filter-game-mode").value;
+    const vocabSet = document.getElementById("filter-vocab-set").value;
+    
+    // Construct URL with query parameters
+    const url = new URL(leaderboardApiUrl);
+    url.searchParams.append("action", "getScores");
+    if (gameMode) url.searchParams.append("gameMode", gameMode);
+    if (vocabSet) url.searchParams.append("vocabSet", vocabSet);
+    url.searchParams.append("limit", 10);
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                displayLeaderboardData(data.scores);
+            } else {
+                document.getElementById("leaderboard-data").innerHTML = 
+                    "<p>Error loading leaderboard data. Please try again.</p>";
+            }
+        })
+        .catch(error => {
+            console.error("Error loading leaderboard:", error);
+            document.getElementById("leaderboard-data").innerHTML = 
+                "<p>Error loading leaderboard data. Please try again.</p>";
+        });
+}
+
+function displayLeaderboardData(scores) {
+    const leaderboardElement = document.getElementById("leaderboard-data");
+    
+    if (scores.length === 0) {
+        leaderboardElement.innerHTML = "<p>No scores found for the selected filters.</p>";
+        return;
+    }
+    
+    // Create table
+    let html = `
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #e6e6fa;">
+                    <th style="padding: 8px; text-align: left; border-bottom: 2px solid #9370db;">Rank</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 2px solid #9370db;">Player</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 2px solid #9370db;">Score</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 2px solid #9370db;">Game Mode</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 2px solid #9370db;">Vocab Set</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    scores.forEach((score, index) => {
+        const rowStyle = index % 2 === 0 ? "background-color: #f8f8ff;" : "";
+        html += `
+            <tr style="${rowStyle}">
+                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${index + 1}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${score.playerName}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${score.score}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${formatGameMode(score.gameMode)}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${score.vocabSet}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    leaderboardElement.innerHTML = html;
+}
+
+function formatGameMode(mode) {
+    switch(mode) {
+        case "multiple-choice": return "Multiple Choice";
+        case "spelling": return "Spelling Challenge";
+        case "scramble": return "Word Scramble";
+        default: return mode;
+    }
+}
+
+// Add a leaderboard button to your game
+function addLeaderboardButton() {
+    const leaderboardBtn = document.createElement("button");
+    leaderboardBtn.textContent = "View Leaderboard";
+    leaderboardBtn.id = "leaderboard-btn";
+    leaderboardBtn.style.backgroundColor = "#9370db";
+    leaderboardBtn.style.color = "white";
+    leaderboardBtn.style.border = "none";
+    leaderboardBtn.style.padding = "10px 20px";
+    leaderboardBtn.style.borderRadius = "5px";
+    leaderboardBtn.style.cursor = "pointer";
+    leaderboardBtn.style.margin = "10px";
+    
+    leaderboardBtn.addEventListener("click", showLeaderboard);
+    
+    // Add to setup screen
+    const setupControls = document.createElement("div");
+    setupControls.className = "game-controls";
+    setupControls.appendChild(leaderboardBtn);
+    setupScreen.appendChild(setupControls);
+    
+    // Add to results screen
+    const leaderboardBtnResults = leaderboardBtn.cloneNode(true);
+    leaderboardBtnResults.addEventListener("click", showLeaderboard);
+    document.getElementById("results-screen").insertBefore(leaderboardBtnResults, playAgainBtn);
+}
+
+// Modify endGame function to save score
+const originalEndGame = endGame;
+endGame = function() {
+    originalEndGame();
+    saveScoreToLeaderboard();
+};
+
+// Initialize leaderboard button when page loads
+document.addEventListener("DOMContentLoaded", function() {
+    loadVocabularySets();
+    addLeaderboardButton();
+});
 
         // Load vocabulary sets when page loads
         document.addEventListener("DOMContentLoaded", loadVocabularySets);
