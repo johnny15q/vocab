@@ -1,6 +1,11 @@
 {
     "Science": [
       { "word": "Acceleration", "definition": "the rate at which the velocity of an object changes over time" },
+      { "word": "Hurricane", "definition": "hot humid air from the ocean that rises into a spiral shape" },
+      { "word": "Tornado", "definition": "a violent rotating column of air that touches the ground and attached to a thunderstorm" },
+      { "word": "Drought", "definition": "a long period of time with no water" },
+      { "word": "climate change", "definition": "global warming that causes temperatures to rise and animals to lose their habitats" },
+      { "word": "Tsunami", "definition": "a long high sea wave caused by an earthquak, submarine landslide, or other disturbance" },
       { "word": "Adaptation", "definition": "a change in an organism to better fit an ecosystem" },
       { "word": "Air Pressure", "definition": "the push of gases against a surface" },
       { "word": "Artery", "definition": "a blood vessel that carries blood away from the heart to other parts of the body" },
