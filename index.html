@@ -285,12 +285,11 @@
         
         // Define vocabulary sets with their file paths
         const vocabularySets = [
-            { name: "Science - Part One", file: "SCIENCE-ani.json" },
-            { name: "Science - Part Two", file: "SCIENCE-planet.json" },
-            { name: "ELA Vocabulary", file: "ELA-vocab.json" },
-            { name: "Math Terms", file: "MATH-vocab.json" }
+            { name: "Science - Part One", file: "science-ani.json" },
+            { name: "Science - Part Two", file: "science-planet.json" },
+            { name: "ELA Vocabulary", file: "ela-vocab.json" },
+            { name: "Math Terms", file: "math-vocab.json" }
         ];
-
         
         // DOM elements
         const setupScreen = document.getElementById("setup-screen");
@@ -391,14 +390,15 @@
             scoreDisplay.textContent = score;
             
             // Start timer
-            timeLeft = 60;
+            let totalTime = 300;
+            let timeLeft = totalTime;
             timeDisplay.textContent = timeLeft;
             progressBar.style.width = "100%";
             
             timer = setInterval(() => {
                 timeLeft--;
                 timeDisplay.textContent = timeLeft;
-                const percentage = (timeLeft / 300) * 100;
+                const percentage = (timeLeft / timeLeft) * 100;
                 progressBar.style.width = `${percentage}%`;
                 
                 if (timeLeft <= 0) {
